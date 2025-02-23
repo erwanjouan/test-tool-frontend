@@ -62,3 +62,6 @@ For more information on using the Angular CLI, including detailed command refere
 ng add @angular/material
 npm install rxjs
 ```
+
+## Theming
+https://angular-material.dev/articles/modify-angular-material-19-theme-with-scss-css
