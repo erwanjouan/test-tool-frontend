@@ -1,2 +1,9 @@
-<app-create-test></app-create-test>
+<section>
+    <button mat-flat-button class="create-button" [routerLink]="'/create'">
+      Nouveau test
+    </button>
+  <button mat-flat-button class="create-button" [routerLink]="'/executions'">
+    Relancer un test existant
+  </button>
+</section>
 <app-test-table></app-test-table>

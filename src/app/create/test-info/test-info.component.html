@@ -1,0 +1,19 @@
+<form class="example-form">
+  <mat-form-field class="test-name">
+    <mat-label>Nom du test</mat-label>
+    <input type="Name" matInput
+           [formControl]="inputFormControl"
+           [errorStateMatcher]="matcher"
+          (change)="updateTitle()">
+    @if (inputFormControl.hasError('required')) {
+      <mat-error>Un nom <strong>est requis</strong></mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field class="test-description">
+    <mat-label>Commentaire</mat-label>
+    <input type="commentaire" matInput
+           [formControl]="descriptionFormControl"
+           (change)="updateDescription()">
+  </mat-form-field>
+</form>

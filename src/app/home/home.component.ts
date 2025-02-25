@@ -1,12 +1,14 @@
 import {Component} from '@angular/core';
-import {CreateTestComponent} from './create-test/create-test.component';
 import {TestTableComponent} from './test-table/test-table.component';
+import {MatButton} from '@angular/material/button';
+import {Router, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-home',
   imports: [
-    CreateTestComponent,
-    TestTableComponent
+    TestTableComponent,
+    MatButton,
+    RouterLink
   ],
   templateUrl: './home.component.html',
   standalone: true,

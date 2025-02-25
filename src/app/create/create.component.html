@@ -1,0 +1,39 @@
+<app-test-info
+    [nrTestExecution]="nrTestExecution"
+    (titleModified)="handleTitleModified($event)"
+    (descriptionModified)="handleDescriptionModified($event)"
+>
+</app-test-info>
+
+<mat-expansion-panel (opened)="panel1OpenState.set(true)" (closed)="panel1OpenState.set(false)">
+  <mat-expansion-panel-header>
+    <mat-panel-title>Scenarios Priorite 1</mat-panel-title>
+    <mat-panel-description>{{panel1OpenState() ? 'Fermer' : 'Ouvrir'}}</mat-panel-description>
+  </mat-expansion-panel-header>
+  <app-test-selection [prioriteSignal]="1"></app-test-selection>
+</mat-expansion-panel>
+
+<mat-expansion-panel (opened)="panel2OpenState.set(true)" (closed)="panel2OpenState.set(false)">
+  <mat-expansion-panel-header>
+    <mat-panel-title>Scenarios Priorite 2</mat-panel-title>
+    <mat-panel-description>{{panel2OpenState() ? 'Fermer' : 'Ouvrir'}}</mat-panel-description>
+  </mat-expansion-panel-header>
+  <app-test-selection [prioriteSignal]="2"></app-test-selection>
+</mat-expansion-panel>
+
+<mat-expansion-panel (opened)="panel3OpenState.set(true)" (closed)="panel3OpenState.set(false)">
+  <mat-expansion-panel-header>
+    <mat-panel-title>Scenarios Priorite 3</mat-panel-title>
+    <mat-panel-description>{{panel3OpenState() ? 'Fermer' : 'Ouvrir'}}</mat-panel-description>
+  </mat-expansion-panel-header>
+  <app-test-selection [prioriteSignal]="3"></app-test-selection>
+</mat-expansion-panel>
+
+<section>
+  <button mat-flat-button class="create-button" [routerLink]="'/confirm'" >
+    Créer
+  </button>
+  <button mat-flat-button class="create-button" [routerLink]="'/home'" >
+    Annuler
+  </button>
+</section>
