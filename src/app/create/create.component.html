@@ -1,39 +1,55 @@
-<app-test-info
-    [nrTestExecution]="nrTestExecution"
-    (titleModified)="handleTitleModified($event)"
-    (descriptionModified)="handleDescriptionModified($event)"
->
-</app-test-info>
+<mat-stepper [linear]="true" #stepper>
+  <!-- Step 1 : Nom, Description -->
+  <mat-step [stepControl]="generalInfo">
+    <form [formGroup]="generalInfo">
+      <ng-template matStepLabel>Nom, description</ng-template>
+      <div class="vertical-align">
+        <!-- Name -->
+        <mat-form-field class="general-info">
+          <input matInput placeholder="Nom" formControlName="name" required>
+          @if (generalInfo.get('name')?.invalid) {
+            <mat-error>Saisir un nom de test</mat-error>
+          }
+        </mat-form-field>
+        <!-- Description -->
+        <mat-form-field class="general-info">
+          <input matInput placeholder="Description" formControlName="description">
+        </mat-form-field>
+      </div>
+      <!-- Next -->
+      <div>
+        <button mat-button matStepperNext>Suivant</button>
+      </div>
+    </form>
+  </mat-step>
+  <!-- Step 2: Selection des scenarios -->
+  <mat-step [stepControl]="testSelection" label="Sélection des tests">
+    <form [formGroup]="testSelection">
+      <app-test-selection [prioriteSignal]="1" (selectionChanged)="onSelectionChanged($event)"></app-test-selection>
+      <app-test-selection [prioriteSignal]="2" (selectionChanged)="onSelectionChanged($event)"></app-test-selection>
+      <app-test-selection [prioriteSignal]="3" (selectionChanged)="onSelectionChanged($event)"></app-test-selection>
+      <!-- Next -->
+      <div>
+        <button mat-button matStepperPrevious>Précédent</button>
+        <button mat-button matStepperNext>Suivant</button>
+      </div>
+    </form>
+  </mat-step>
+  <!-- Step 3: Paramétrage -->
+  <mat-step [stepControl]="testConfirm" label="Ajout des références">
+    <form [formGroup]="testConfirm">
+      <app-test-confirmation
+        [testName]="generalInfo.get('name')?.value"
+        [testDescription]="generalInfo.get('description')?.value"
+        [testMap]="_nrTestsMap"
+      >
+      </app-test-confirmation>
+      <!-- Next -->
+      <div>
+        <button mat-button matStepperPrevious>Précédent</button>
+        <button mat-button (click)="launchExecution()">Lancer</button>
+      </div>
+    </form>
+  </mat-step>
 
-<mat-expansion-panel (opened)="panel1OpenState.set(true)" (closed)="panel1OpenState.set(false)">
-  <mat-expansion-panel-header>
-    <mat-panel-title>Scenarios Priorite 1</mat-panel-title>
-    <mat-panel-description>{{panel1OpenState() ? 'Fermer' : 'Ouvrir'}}</mat-panel-description>
-  </mat-expansion-panel-header>
-  <app-test-selection [prioriteSignal]="1"></app-test-selection>
-</mat-expansion-panel>
-
-<mat-expansion-panel (opened)="panel2OpenState.set(true)" (closed)="panel2OpenState.set(false)">
-  <mat-expansion-panel-header>
-    <mat-panel-title>Scenarios Priorite 2</mat-panel-title>
-    <mat-panel-description>{{panel2OpenState() ? 'Fermer' : 'Ouvrir'}}</mat-panel-description>
-  </mat-expansion-panel-header>
-  <app-test-selection [prioriteSignal]="2"></app-test-selection>
-</mat-expansion-panel>
-
-<mat-expansion-panel (opened)="panel3OpenState.set(true)" (closed)="panel3OpenState.set(false)">
-  <mat-expansion-panel-header>
-    <mat-panel-title>Scenarios Priorite 3</mat-panel-title>
-    <mat-panel-description>{{panel3OpenState() ? 'Fermer' : 'Ouvrir'}}</mat-panel-description>
-  </mat-expansion-panel-header>
-  <app-test-selection [prioriteSignal]="3"></app-test-selection>
-</mat-expansion-panel>
-
-<section>
-  <button mat-flat-button class="create-button" [routerLink]="'/confirm'" >
-    Créer
-  </button>
-  <button mat-flat-button class="create-button" [routerLink]="'/home'" >
-    Annuler
-  </button>
-</section>
+</mat-stepper>

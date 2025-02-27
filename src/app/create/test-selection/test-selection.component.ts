@@ -1,14 +1,20 @@
-import {Component, effect, input, Input, OnInit, output} from '@angular/core';
+import {Component, effect, input, Input, OnInit, output, signal} from '@angular/core';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {NrTest} from '../../../model/nr-test';
-import {SelectionModel} from '@angular/cdk/collections';
+import {SelectionChange, SelectionModel} from '@angular/cdk/collections';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {RecevabiliteService} from '../../../service/recevabilite.service';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelDescription,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle
+} from '@angular/material/expansion';
 
 @Component({
   selector: 'app-test-selection',
   imports: [
-    MatTableModule, MatCheckboxModule
+    MatTableModule, MatCheckboxModule, MatExpansionPanel, MatExpansionPanelDescription, MatExpansionPanelHeader, MatExpansionPanelTitle
   ],
   templateUrl: './test-selection.component.html',
   standalone: true,
@@ -17,11 +23,13 @@ import {RecevabiliteService} from '../../../service/recevabilite.service';
 export class TestSelectionComponent implements OnInit {
   //
   prioriteSignal = input(0)
+  readonly panelOpenState = signal(false);
+
   //
   displayedColumns: string[] = ['select', 'reference', 'titre', 'description'];
   dataSource: MatTableDataSource<NrTest>
   selection = new SelectionModel<NrTest>(true, []);
-  onSelectionChange = output<NrTest[]>({alias: 'selectionChanged'});
+  onSelectionChange = output<SelectionChange<NrTest>>({alias: 'selectionChanged'});
 
   constructor(private recevabiliteService: RecevabiliteService) {
   }
@@ -29,7 +37,7 @@ export class TestSelectionComponent implements OnInit {
   ngOnInit(): void {
     this.recevabiliteService.getNrTestsByPriorite(this.prioriteSignal())
       .subscribe(data => this.dataSource = new MatTableDataSource<NrTest>(data))
-    this.selection.changed.subscribe(s => this.onSelectionChange.emit(s.source.selected));
+    this.selection.changed.subscribe(s => this.onSelectionChange.emit(s));
   }
 
   /** Whether the number of selected elements matches the total number of rows. */

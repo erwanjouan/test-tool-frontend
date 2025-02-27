@@ -2,22 +2,28 @@ import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {NrTest} from '../model/nr-test';
+import {NrExecution} from '../model/nr-execution';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RecevabiliteService {
-  private url:string = 'http://localhost:8080/tnr/api/tests'
 
-  constructor(private http:HttpClient) {
+  private rootUrl: string = 'http://localhost:8080/tnr/api'
+
+  constructor(private http: HttpClient) {
   }
 
-  getNrTestsByPriorite(priorite:number): Observable<NrTest[]> {
+  getNrTestsByPriorite(priorite: number): Observable<NrTest[]> {
     const params = new HttpParams({
       fromObject: {
         priorite: priorite
       }
     })
-    return this.http.get<NrTest[]>(this.url, { params: params })
+    return this.http.get<NrTest[]>(this.rootUrl+ '/tests', {params: params})
+  }
+
+  createExecution(nrExecution:NrExecution): Observable<NrExecution> {
+    return this.http.post<NrExecution>(this.rootUrl + '/executions/save', nrExecution);
   }
 }

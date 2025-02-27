@@ -68,3 +68,8 @@ https://angular-material.dev/articles/modify-angular-material-19-theme-with-scss
 
 ## Stub
 https://github.com/FraktonDevelopers/spring-boot-angular-maven-build
+
+## FormArrayName
+
+https://stackblitz.com/edit/reactive-form-key-value-pair?file=src%2Fapp%2Fapp.component.ts,src%2Fapp%2Fapp.component.html
+https://v17.angular.io/api/forms/FormArrayName

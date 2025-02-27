@@ -10,7 +10,7 @@ import {
 import {ErrorStateMatcher} from '@angular/material/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {NrTestExecution} from '../../../model/nr-test-execution';
+import {NrExecution} from '../../../model/nr-execution';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -34,7 +34,7 @@ export class TestInfoComponent {
 
   onTitleUpdate = output<string>({alias: 'titleModified'});
   onDescriptionUpdate = output<string>({alias: 'descriptionModified'});
-  @Input() nrTestExecution!: NrTestExecution;
+  @Input() nrTestExecution!: NrExecution;
 
   updateTitle() {
     if (this.inputFormControl.value != null) {
