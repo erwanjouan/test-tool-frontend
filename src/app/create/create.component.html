@@ -36,8 +36,24 @@
     </form>
   </mat-step>
   <!-- Step 3: Paramétrage -->
-  <mat-step [stepControl]="testConfirm" label="Ajout des références">
-    <form [formGroup]="testConfirm">
+  <mat-step [stepControl]="testParams" label="Ajout des références">
+    <form [formGroup]="testParams">
+      <app-test-parameters
+        [testName]="generalInfo.get('name')?.value"
+        [testDescription]="generalInfo.get('description')?.value"
+        [testMap]="_nrTestsMap"
+      >
+      </app-test-parameters>
+      <!-- Next -->
+      <div>
+        <button mat-button matStepperPrevious>Précédent</button>
+        <button mat-button matStepperNext>Suivant</button>
+      </div>
+    </form>
+  </mat-step>
+  <!-- Step 4: Fin -->
+  <mat-step [stepControl]="testParams" label="Fin: Récapitulatif">
+    <form [formGroup]="testParams">
       <app-test-confirmation
         [testName]="generalInfo.get('name')?.value"
         [testDescription]="generalInfo.get('description')?.value"

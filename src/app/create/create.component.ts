@@ -11,6 +11,8 @@ import {TestConfirmationComponent} from './test-confirmation/test-confirmation.c
 import {MatButtonModule} from '@angular/material/button';
 import {NrExecutionParam} from '../../model/nr-execution-param';
 import {RecevabiliteService} from '../../service/recevabilite.service';
+import {TestParametersComponent} from './test-parameters/test-parameters.component';
+import {Router, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-create',
@@ -23,7 +25,8 @@ import {RecevabiliteService} from '../../service/recevabilite.service';
     MatInputModule,
     TestSelectionComponent,
     TestConfirmationComponent,
-    MatButtonModule
+    MatButtonModule,
+    TestParametersComponent
   ],
   templateUrl: './create.component.html',
   standalone: true,
@@ -39,13 +42,14 @@ export class CreateComponent {
   testSelection = this._formBuilder.group({
     selectedTests: ''
   });
-  testConfirm = this._formBuilder.group({
+  testParams = this._formBuilder.group({
     confirmedTests: ''
   });
+  nrExecution: NrExecution
 
   protected _nrTestsMap: Map<number, NrTest> = new Map<number, NrTest>()
 
-  constructor(private recevabiliteService: RecevabiliteService) {
+  constructor(private recevabiliteService: RecevabiliteService, private _router:Router) {
   }
 
   onSelectionChanged(selectionChange: SelectionChange<NrTest>) {
@@ -70,7 +74,7 @@ export class CreateComponent {
     };
   }
 
-  launchExecution() {
+  generateExecution(){
     const nrExecutionParams: NrExecutionParam[] = []
     for (const tnrTest of this._nrTestsMap.values()) {
       if (tnrTest.params.length == 0) {
@@ -81,14 +85,21 @@ export class CreateComponent {
           .forEach(nrExecutionParam => nrExecutionParams.push(nrExecutionParam))
       }
     }
-    const nrExecution: NrExecution = {
+    this.nrExecution = {
       name: this.name,
       description: this.description,
-      status: 'pending',
+      status: 'Pending',
       nrExecutionParams: nrExecutionParams
     }
-    console.log('pushing',nrExecution)
-    this.recevabiliteService.createExecution(nrExecution)
-      .subscribe(data => console.log('created',data))
+  }
+
+  launchExecution() {
+    this.generateExecution()
+    console.log('pushing',this.nrExecution)
+    this.recevabiliteService.createExecution(this.nrExecution)
+      .subscribe(data => {
+        console.log('created',data)
+        this._router.navigateByUrl("'/home'")
+      })
   }
 }

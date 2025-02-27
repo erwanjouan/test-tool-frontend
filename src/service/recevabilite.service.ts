@@ -26,4 +26,8 @@ export class RecevabiliteService {
   createExecution(nrExecution:NrExecution): Observable<NrExecution> {
     return this.http.post<NrExecution>(this.rootUrl + '/executions/save', nrExecution);
   }
+
+  getExecutions():Observable<NrExecution[]> {
+    return this.http.get<NrExecution[]>(this.rootUrl+'/executions')
+  }
 }

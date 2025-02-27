@@ -4,7 +4,8 @@ import {NrTest} from '../../../model/nr-test';
 import {MatButtonModule} from '@angular/material/button';
 import {ReactiveFormsModule} from '@angular/forms';
 import {KeyValuePipe, NgForOf} from '@angular/common';
-import {TestParamsComponent} from './test-params/test-params.component';
+import {TestParamsComponent} from '../test-parameters/test-params/test-params.component';
+import {MatLabel} from '@angular/material/form-field';
 
 @Component({
   selector: 'app-test-confirmation',
@@ -14,7 +15,7 @@ import {TestParamsComponent} from './test-params/test-params.component';
     ReactiveFormsModule,
     NgForOf,
     KeyValuePipe,
-    TestParamsComponent
+    MatLabel
   ],
   templateUrl: './test-confirmation.component.html',
   standalone: true,

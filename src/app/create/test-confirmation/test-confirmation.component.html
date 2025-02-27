@@ -5,10 +5,19 @@
   </mat-card-header>
   <mat-card-content>
 
-    <app-test-params
-      *ngFor="let mapItem of testMap | keyvalue"
-      [nrTest]="mapItem.value">
-    </app-test-params>
+    <div *ngFor="let mapItem of testMap | keyvalue" class="test-params">
+      <div>
+        <mat-label style="font-size: 18px;font-weight: bold;">
+          [{{ mapItem.value.reference }}] {{ mapItem.value.titre }}
+        </mat-label>
+      </div>
+      <div class="test-params-description">
+        <mat-label>{{ mapItem.value.description }}</mat-label>
+      </div>
+      <div *ngFor="let param of mapItem.value.params">
+        <mat-label>- {{ param }}</mat-label>
+      </div>
+    </div>
 
   </mat-card-content>
 </mat-card>
