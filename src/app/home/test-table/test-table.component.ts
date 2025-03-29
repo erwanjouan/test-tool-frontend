@@ -6,6 +6,7 @@ import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {RecevabiliteService} from '../../../service/recevabilite.service';
 import {NrExecution} from '../../../model/nr-execution';
+import {EventSourceService} from '../../../service/event-source.service';
 
 /**
  * @title Table with filtering
@@ -17,17 +18,33 @@ import {NrExecution} from '../../../model/nr-execution';
   standalone: true,
   styleUrl: './test-table.component.scss'
 })
-export class TestTableComponent implements AfterViewInit {
+export class TestTableComponent implements AfterViewInit, OnInit {
   displayedColumns: string[] = ['id', 'name', 'description', 'status'];
   dataSource: MatTableDataSource<NrExecution>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private _recevabiliteService:RecevabiliteService){
+  url = 'http://localhost:8080/tnr/api/sse';
+  options = { withCredentials: false };
+  eventNames=  ['refresh']
+
+  constructor(private _recevabiliteService:RecevabiliteService, private eventSourceService :EventSourceService){
   }
 
+  ngOnInit(): void {
+    this.eventSourceService.connectToServerSentEvents(this.url, this.options, this.eventNames)
+      .subscribe(messageEvent => {
+        this.refresh();
+      })
+    }
+
   ngAfterViewInit() {
+    this.refresh();
+  }
+
+  private refresh() {
+    console.log("table refreshed")
     this._recevabiliteService.getExecutions()
       .subscribe(data => {
         this.dataSource = new MatTableDataSource(data)
