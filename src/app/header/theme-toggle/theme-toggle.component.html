@@ -1,0 +1,7 @@
+<button class="toggle-theme-button" mat-button (click)="toggleTheme()" matTooltip="{{ getToolTip() }}">
+  @if (isDarkModeEnabled){
+    <mat-icon>wb_sunny</mat-icon>
+  } @else {
+    <mat-icon>nights_stay</mat-icon>
+  }
+</button>
