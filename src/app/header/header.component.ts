@@ -1,9 +1,10 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatToolbar} from '@angular/material/toolbar';
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 import {RouterLink} from '@angular/router';
 import {ThemeToggleComponent} from './theme-toggle/theme-toggle.component';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -18,6 +19,12 @@ import {ThemeToggleComponent} from './theme-toggle/theme-toggle.component';
   standalone: true,
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
+
+  applicationVersion: string;
+
+  ngOnInit(): void {
+    this.applicationVersion = environment.applicationVersion;
+  }
 
 }
