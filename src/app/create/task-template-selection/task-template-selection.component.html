@@ -1,6 +1,6 @@
 <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
   <mat-expansion-panel-header>
-    <mat-panel-title>Scenarios Priorite {{prioriteSignal()}} </mat-panel-title>
+    <mat-panel-title>Task category {{categorySignal()}} </mat-panel-title>
     <mat-panel-description>{{panelOpenState() ? 'Fermer' : 'Ouvrir'}}</mat-panel-description>
   </mat-expansion-panel-header>
 
@@ -24,22 +24,16 @@
       </td>
     </ng-container>
 
-    <!-- Position Column -->
-    <ng-container matColumnDef="reference">
-      <th mat-header-cell *matHeaderCellDef> Reference </th>
-      <td mat-cell *matCellDef="let element"> {{element.reference}} </td>
-    </ng-container>
-
     <!-- Name Column -->
-    <ng-container matColumnDef="titre">
-      <th mat-header-cell *matHeaderCellDef> Titre </th>
-      <td mat-cell *matCellDef="let element"> {{element.titre}} </td>
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef> Title </th>
+      <td mat-cell *matCellDef="let element"> {{element.title}} </td>
     </ng-container>
 
     <!-- Weight Column -->
-    <ng-container matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef> Description </th>
-      <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+    <ng-container matColumnDef="content">
+      <th mat-header-cell *matHeaderCellDef> Content </th>
+      <td mat-cell *matCellDef="let element"> {{element.content}} </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

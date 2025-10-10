@@ -1,0 +1,6 @@
+@if (this.tasks.length > 0){
+  <app-task-param *ngFor="let selectedTask of execution.tasks" [task]="selectedTask">
+  </app-task-param>
+} @else {
+  <div>No task selected, go back to previous screen</div>
+}

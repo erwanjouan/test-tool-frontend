@@ -1,0 +1,31 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-label style="font-size: 16px;">{{ title }}</mat-label>
+      <mat-list>
+        <mat-list-item># {{ content }}</mat-list-item>
+      </mat-list>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div [formGroup]="form" class="test-params">
+      <ng-container formArrayName="params">
+        <ng-container *ngFor="let paramForm of params.controls; let i = index">
+          <div [formGroupName]="i">
+            <mat-form-field class="test-reference">
+              <input formControlName="value" matInput type="Référence">
+            </mat-form-field>
+            <mat-icon (click)="deleteParam(i)" class="delete-btn">
+              delete_forever
+            </mat-icon>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+    <div class="test-params-buttons">
+      <button (click)="addParam()" [disabled]="hasOneParam()" mat-raised-button>
+        Add a parameter
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>

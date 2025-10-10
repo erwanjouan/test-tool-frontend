@@ -1,18 +1,18 @@
-import {Component, inject, Input} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {NrTest} from '../../model/nr-test';
 import {SelectionChange} from '@angular/cdk/collections';
-import {NrExecution} from '../../model/nr-execution';
+import {Execution} from '../../model/execution';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-import {TestSelectionComponent} from './test-selection/test-selection.component';
-import {TestConfirmationComponent} from './test-confirmation/test-confirmation.component';
 import {MatButtonModule} from '@angular/material/button';
-import {NrExecutionParam} from '../../model/nr-execution-param';
-import {RecevabiliteService} from '../../service/recevabilite.service';
-import {TestParametersComponent} from './test-parameters/test-parameters.component';
-import {Router, RouterLink} from '@angular/router';
+import {BackendService} from '../../service/backend.service';
+import {TaskParametersComponent} from './test-parameters/task-parameters.component';
+import {ActivatedRoute, Router} from '@angular/router';
+import {TaskTemplateSelectionComponent} from './task-template-selection/task-template-selection.component';
+import {TaskTemplate} from '../../model/task-template';
+import {Task} from '../../model/task';
+import {TaskConfirmationComponent} from './task-confirmation/task-confirmation.component';
 
 @Component({
   selector: 'app-create',
@@ -23,39 +23,32 @@ import {Router, RouterLink} from '@angular/router';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    TestSelectionComponent,
-    TestConfirmationComponent,
     MatButtonModule,
-    TestParametersComponent
+    TaskParametersComponent,
+    TaskTemplateSelectionComponent,
+    TaskConfirmationComponent
   ],
   templateUrl: './create.component.html',
   standalone: true,
   styleUrl: './create.component.scss'
 })
-export class CreateComponent {
+export class CreateComponent implements OnInit {
 
+  execution: Execution
   private _formBuilder = inject(FormBuilder);
   generalInfo = this._formBuilder.group({
-    name: ['Default', Validators.required],
+    name: ['', Validators.required],
     description: ''
   });
-  testSelection = this._formBuilder.group({
+  taskSelection = this._formBuilder.group({
     selectedTests: ''
   });
-  testParams = this._formBuilder.group({
+  taskParams = this._formBuilder.group({
     confirmedTests: ''
   });
-  nrExecution: NrExecution
-
-  protected _nrTestsMap: Map<number, NrTest> = new Map<number, NrTest>()
-
-  constructor(private recevabiliteService: RecevabiliteService, private _router:Router) {
-  }
-
-  onSelectionChanged(selectionChange: SelectionChange<NrTest>) {
-    selectionChange.removed.forEach(nrTest => this._nrTestsMap.delete(nrTest.id))
-    selectionChange.added.forEach(nrTest => this._nrTestsMap.set(nrTest.id, nrTest))
-  }
+  private readonly _backendService = inject(BackendService);
+  private _router: Router = inject(Router);
+  private _route: ActivatedRoute = inject(ActivatedRoute);
 
   get name(): string {
     let value = this.generalInfo.get('name')?.value
@@ -67,39 +60,61 @@ export class CreateComponent {
     return value == null || false ? '' : value
   }
 
-  toNrExecutionParams(nrTestId: number, reference: string): NrExecutionParam {
-    return {
-      nrTestId: nrTestId,
-      reference: reference
-    };
-  }
-
-  generateExecution(){
-    const nrExecutionParams: NrExecutionParam[] = []
-    for (const tnrTest of this._nrTestsMap.values()) {
-      if (tnrTest.params.length == 0) {
-        nrExecutionParams.push(this.toNrExecutionParams(tnrTest.id, 'NULL'))
-      } else {
-        tnrTest.params
-          .map(param => this.toNrExecutionParams(tnrTest.id, param))
-          .forEach(nrExecutionParam => nrExecutionParams.push(nrExecutionParam))
-      }
-    }
-    this.nrExecution = {
-      name: this.name,
-      description: this.description,
-      status: 'Pending',
-      nrExecutionParams: nrExecutionParams
-    }
-  }
-
-  launchExecution() {
-    this.generateExecution()
-    console.log('pushing',this.nrExecution)
-    this.recevabiliteService.createExecution(this.nrExecution)
-      .subscribe(data => {
-        console.log('created',data)
-        this._router.navigateByUrl("'/home'")
+  ngOnInit(): void {
+    const execId = this._route.snapshot.paramMap.get('executionId');
+    if (execId != null) {
+      this._backendService.getExecution(execId).subscribe(exec => {
+        this.execution = exec;
+        this.generalInfo.setValue({
+          name: exec.name,
+          description: exec.description
+        })
       })
+    }
+  }
+
+  onSelectionChanged(selectionChange: SelectionChange<TaskTemplate>) {
+    selectionChange.removed.forEach(taskTemplate => this.removeTask(taskTemplate));
+    selectionChange.added.forEach(taskTemplate => this.addIfMissing(taskTemplate))
+  }
+
+  removeTask(taskTemplate: TaskTemplate) {
+    this.execution.tasks = this.execution.tasks
+      .filter(task => task.taskTemplate.id !== taskTemplate.id)
+  }
+
+  private addIfMissing(taskTemplate: TaskTemplate) {
+    let task: Task = this.toTask(taskTemplate);
+    const duplicates: Task[] = this.execution.tasks
+      .filter(task => task.taskTemplate.id === taskTemplate.id)
+    if (duplicates.length == 0) {
+      this.execution.tasks = this.execution.tasks.concat(task);
+    }
+  }
+
+  createExecution(): void {
+    this.execution.name = this.name
+    this.execution.description = this.description
+    this._backendService.saveExecution(this.execution)
+      .subscribe(newExecution => {
+        this._router.navigateByUrl("'home'");
+      })
+  }
+
+  hasSelectedTask(): boolean {
+    let hasExecution = this.execution != null && this.execution != undefined;
+    if (hasExecution) {
+      let hasTasks: boolean = this.execution.tasks != null && this.execution.tasks != undefined;
+      return hasExecution && hasTasks && this.execution.tasks.length > 0;
+    }
+    return false;
+  }
+
+  toTask(taskTemplate: TaskTemplate): Task {
+    return {
+      taskTemplate: taskTemplate,
+      status: 'CREATED',
+      params: []
+    }
   }
 }

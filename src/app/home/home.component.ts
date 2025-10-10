@@ -1,12 +1,12 @@
 import {Component} from '@angular/core';
-import {TestTableComponent} from './test-table/test-table.component';
+import {ExecutionTableComponent} from './execution-table/execution-table.component';
 import {MatButton} from '@angular/material/button';
-import {Router, RouterLink} from '@angular/router';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-home',
   imports: [
-    TestTableComponent,
+    ExecutionTableComponent,
     MatButton,
     RouterLink
   ],
