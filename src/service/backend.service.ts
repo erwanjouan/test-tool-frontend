@@ -34,18 +34,18 @@ export class BackendService {
   }
 
   duplicateExecution(id: number | undefined): Observable<number> {
-    return this._http.get<number>(this.rootUrl + '/executions/' + id + '/duplicate')
+    return this._http.get<number>(this.rootUrl + '/execution/' + id + '/duplicate')
   }
 
   cancelExecution(id: number | undefined) {
-    return this._http.get<number>(this.rootUrl + '/executions/' + id + '/cancel')
+    return this._http.get<number>(this.rootUrl + '/execution/' + id + '/cancel')
   }
 
   startExecution(id: number | undefined) {
-    return this._http.get<number>(this.rootUrl + '/executions/' + id + '/start')
+    return this._http.post<number>(this.rootUrl + '/execution/' + id + '/start', id)
   }
 
   deleteExecution(id: number | undefined): Observable<number> {
-    return this._http.post<number>(this.rootUrl + '/executions/' + id + 'delete/', {params: id})
+    return this._http.post<number>(this.rootUrl + '/execution/' + id + 'delete/', {params: id})
   }
 }
