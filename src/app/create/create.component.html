@@ -1,20 +1,23 @@
 <mat-stepper [linear]="true" #stepper>
-  <!-- Step 1 : Nom, Description -->
+  <!-- Step 1 : Name, Description -->
   <mat-step [stepControl]="generalInfo">
     <form [formGroup]="generalInfo">
-      <ng-template matStepLabel>Nom, description</ng-template>
+      <ng-template matStepLabel>Name, description</ng-template>
       <div class="vertical-align">
+
         <!-- Name -->
         <mat-form-field class="general-info">
-          <input matInput placeholder="Nom" formControlName="name" required>
+          <input matInput placeholder="Name" formControlName="name" required>
           @if (generalInfo.get('name')?.invalid) {
-            <mat-error>Saisir un nom de test</mat-error>
+            <mat-error>Execution name</mat-error>
           }
         </mat-form-field>
+
         <!-- Description -->
         <mat-form-field class="general-info">
           <input matInput placeholder="Description" formControlName="description">
         </mat-form-field>
+
       </div>
       <!-- Next -->
       <div>
@@ -22,48 +25,47 @@
       </div>
     </form>
   </mat-step>
-  <!-- Step 2: Selection des scenarios -->
-  <mat-step [stepControl]="testSelection" label="Sélection des tests">
-    <form [formGroup]="testSelection">
-      <app-test-selection [prioriteSignal]="1" (selectionChanged)="onSelectionChanged($event)"></app-test-selection>
-      <app-test-selection [prioriteSignal]="2" (selectionChanged)="onSelectionChanged($event)"></app-test-selection>
-      <app-test-selection [prioriteSignal]="3" (selectionChanged)="onSelectionChanged($event)"></app-test-selection>
+
+  <!-- Step 2: Selection des taskTemplates -->
+  <mat-step [stepControl]="taskSelection" label="Task selection">
+    <form [formGroup]="taskSelection">
+      <app-task-template-selection [categorySignal]="'system'"
+                                   (selectionChanged)="onSelectionChanged($event)"></app-task-template-selection>
+
       <!-- Next -->
-      <div>
-        <button mat-button matStepperPrevious>Précédent</button>
-        <button mat-button matStepperNext>Suivant</button>
+      <div class="stepper-next">
+        <button mat-button matStepperPrevious>Previous</button>
+        <button mat-button matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
+
   <!-- Step 3: Paramétrage -->
-  <mat-step [stepControl]="testParams" label="Ajout des références">
-    <form [formGroup]="testParams">
-      <app-test-parameters
-        [testName]="generalInfo.get('name')?.value"
-        [testDescription]="generalInfo.get('description')?.value"
-        [testMap]="_nrTestsMap"
+  <mat-step [stepControl]="taskParams" label="Parameters">
+    <form [formGroup]="taskParams">
+      <app-task-parameters
+        [execution]="execution"
       >
-      </app-test-parameters>
+      </app-task-parameters>
       <!-- Next -->
       <div>
-        <button mat-button matStepperPrevious>Précédent</button>
-        <button mat-button matStepperNext>Suivant</button>
+        <button mat-button matStepperPrevious>Previous</button>
+        @if (hasSelectedTask()) {
+          <button mat-button matStepperNext>Next</button>
+        }
       </div>
     </form>
   </mat-step>
+
   <!-- Step 4: Fin -->
-  <mat-step [stepControl]="testParams" label="Fin: Récapitulatif">
-    <form [formGroup]="testParams">
-      <app-test-confirmation
-        [testName]="generalInfo.get('name')?.value"
-        [testDescription]="generalInfo.get('description')?.value"
-        [testMap]="_nrTestsMap"
-      >
-      </app-test-confirmation>
+  <mat-step [stepControl]="taskParams" label="End: Sythesis">
+    <form [formGroup]="taskParams">
+      <app-task-confirmation [execution]="execution">
+      </app-task-confirmation>
       <!-- Next -->
       <div>
-        <button mat-button matStepperPrevious>Précédent</button>
-        <button mat-button (click)="launchExecution()">Lancer</button>
+        <button mat-button matStepperPrevious>Previous</button>
+        <button mat-button (click)="createExecution()">Create</button>
       </div>
     </form>
   </mat-step>

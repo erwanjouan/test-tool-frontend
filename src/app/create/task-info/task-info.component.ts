@@ -10,7 +10,7 @@ import {
 import {ErrorStateMatcher} from '@angular/material/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {NrExecution} from '../../../model/nr-execution';
+import {Execution} from '../../../model/execution';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -21,20 +21,20 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-  selector: 'app-test-info',
+  selector: 'app-task-info',
   imports: [FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule],
-  templateUrl: './test-info.component.html',
+  templateUrl: './task-info.component.html',
   standalone: true,
-  styleUrl: './test-info.component.scss'
+  styleUrl: './task-info.component.scss'
 })
-export class TestInfoComponent {
+export class TaskInfoComponent {
   inputFormControl = new FormControl('', [Validators.required]);
   descriptionFormControl = new FormControl('', []);
   matcher = new MyErrorStateMatcher();
 
   onTitleUpdate = output<string>({alias: 'titleModified'});
   onDescriptionUpdate = output<string>({alias: 'descriptionModified'});
-  @Input() nrTestExecution!: NrExecution;
+  @Input() nrTestExecution!: Execution;
 
   updateTitle() {
     if (this.inputFormControl.value != null) {

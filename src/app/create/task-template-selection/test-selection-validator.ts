@@ -1,10 +1,10 @@
 import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
-import {NrTest} from '../../../model/nr-test';
+import {Task} from '../../../model/task';
 
 export function testSelectionValidator(): ValidatorFn {
   return (control:AbstractControl) : ValidationErrors | null => {
 
-    const value:NrTest[] = control.value;
+    const value:Task[] = control.value;
 
     console.log(value);
 
