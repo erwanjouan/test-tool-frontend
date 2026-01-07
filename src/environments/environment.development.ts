@@ -1,3 +1,5 @@
 export const environment = {
-  applicationVersion: '0.0.1'
+  applicationVersion: 'Dev_version',
+  production: false,
+  apiUrl: 'http://localhost:8080/scheduler/api'
 };
