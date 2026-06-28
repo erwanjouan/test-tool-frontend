@@ -18,34 +18,34 @@ export class BackendService {
         category: category
       }
     })
-    return this._http.get<TaskTemplate[]>(environment.apiUrl + '/task-template', {params: params})
+    return this._http.get<TaskTemplate[]>(environment.apiUrl + '/task-templates', {params: params})
   }
 
   saveExecution(execution: Execution): Observable<Execution> {
-    return this._http.post<Execution>(environment.apiUrl + '/execution/save', execution);
+    return this._http.post<Execution>(environment.apiUrl + '/executions/save', execution);
   }
 
   getExecutions(): Observable<Execution[]> {
-    return this._http.get<Execution[]>(environment.apiUrl + '/execution')
+    return this._http.get<Execution[]>(environment.apiUrl + '/executions')
   }
 
   getExecution(id: any): Observable<Execution> {
-    return this._http.get<Execution>(environment.apiUrl + '/execution/' + id)
+    return this._http.get<Execution>(environment.apiUrl + '/executions/' + id)
   }
 
   duplicateExecution(id: number | undefined): Observable<number> {
-    return this._http.get<number>(environment.apiUrl + '/execution/' + id + '/duplicate')
+    return this._http.post<number>(environment.apiUrl + '/executions/duplicate', id)
   }
 
   cancelExecution(id: number | undefined) {
-    return this._http.get<number>(environment.apiUrl + '/execution/' + id + '/cancel')
+    return this._http.post<number>(environment.apiUrl + '/executions/cancel', id)
   }
 
   startExecution(id: number | undefined) {
-    return this._http.post<number>(environment.apiUrl + '/execution/' + id + '/start', id)
+    return this._http.post<number>(environment.apiUrl + '/executions/' + id + '/start', id)
   }
 
   deleteExecution(id: number | undefined): Observable<number> {
-    return this._http.post<number>(environment.apiUrl + '/execution/' + id + 'delete/', {params: id})
+    return this._http.post<number>(environment.apiUrl + '/executions/delete', id)
   }
 }

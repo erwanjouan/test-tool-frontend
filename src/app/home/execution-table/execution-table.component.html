@@ -66,8 +66,9 @@
           <button mat-icon-button matTooltip="Edit" (click)="copyExecution(row)">
             <mat-icon>edit</mat-icon>
           </button>
-        } @else {
-          <button mat-icon-button matTooltip="Details" (click)="delete(row)">
+        }
+        @if (!isRunning(row)) {
+          <button mat-icon-button matTooltip="Delete" (click)="delete(row)">
             <mat-icon>delete</mat-icon>
           </button>
         }

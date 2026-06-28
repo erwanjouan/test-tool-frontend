@@ -3,7 +3,7 @@
     <mat-expansion-panel-header>
       <mat-panel-title>Log</mat-panel-title>
       </mat-expansion-panel-header>
-      @for (event of eventData;track event){
+      @for (event of eventData();track event){
         <p>{{ event }}</p>
       }
   </mat-expansion-panel>

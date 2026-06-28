@@ -1,8 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Observable, SubscriptionLike} from 'rxjs';
-import {EventSourceService} from '../../../service/event-source.service';
-import {AsyncPipe} from '@angular/common';
-import {MatAccordion, MatExpansionModule, MatExpansionPanel, MatExpansionPanelTitle} from '@angular/material/expansion';
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { scan } from 'rxjs';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { EventBusService } from '../../common/service/event-bus.service';
+import { EventType } from '../../../model/event-type';
+import { ExecutionLog } from '../../../model/execution-log';
 
 @Component({
   selector: 'app-log',
@@ -11,28 +13,13 @@ import {MatAccordion, MatExpansionModule, MatExpansionPanel, MatExpansionPanelTi
   standalone: true,
   styleUrl: './log.component.scss'
 })
-export class LogComponent implements OnInit, OnDestroy{
+export class LogComponent {
+  private _eventBus = inject(EventBusService);
 
-  url = 'http://localhost:8080/tnr/api/sse';
-  options = { withCredentials: false };
-  eventNames=  ['log']
-
-  eventData:string[]=[]
-
-  readonly eventSourceSubscription: SubscriptionLike;
-
-  constructor(private eventSourceService: EventSourceService) {
-  }
-
-  ngOnInit(): void {
-    this.eventSourceService.connectToServerSentEvents(this.url, this.options, this.eventNames)
-      .subscribe(messageEvent => {
-        this.eventData.push(messageEvent.data)
-      })
-    }
-
-  ngOnDestroy() {
-    this.eventSourceSubscription.unsubscribe();
-    this.eventSourceService.close();
-  }
+  eventData = toSignal(
+    this._eventBus.on$<ExecutionLog>(EventType.logPublished).pipe(
+      scan((acc, log) => [...acc, log.messsage ?? ''], [] as string[])
+    ),
+    { initialValue: [] as string[] }
+  );
 }
